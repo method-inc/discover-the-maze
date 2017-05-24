@@ -1,3 +1,13 @@
+https://discover-the-maze.herokuapp.com/
+
+# Run this thing
+
+```
+$ chmod a+x app.py
+$ ./app.py
+```
+Then go to http://localhost:5000
+
 # You're Lost
 You find yourself as an orange square, in a series of corridors that turn left then right then back to the left. It's a never ending maze. How will you find your way out? Is it even possible? The maze seems to go on forever and ever.
 
