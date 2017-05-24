@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!flask/bin/python2.7
 from flask import Flask, jsonify
 
 app = Flask(__name__, static_url_path='')
