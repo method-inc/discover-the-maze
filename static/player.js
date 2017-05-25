@@ -1,12 +1,11 @@
 // /index.html?width=10&height=5&seed=9
 
+var apiUrl = 'http://localhost:5000/api';
 var height = getURLParameter("height") || 50;
 var width = getURLParameter("width") || 100;
 
 var maze = document.getElementById('maze');
 var canvas = document.createElement('canvas');
-canvas.setAttribute('width', width * 4);
-canvas.setAttribute('height', height * 6);
 document.body.appendChild(canvas);
 
 var ctx    = canvas.getContext('2d');
@@ -24,7 +23,6 @@ styleHtml = styleHtml
   .replace(new RegExp('#CCC', 'g'), '#000')
   .replace(new RegExp('#DDD;', 'g'), '#FFF')
   .replace(new RegExp('background-color:.+;', 'g'), '');
-console.log(styleHtml);
 
 var data = `
   <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -38,19 +36,36 @@ var data = `
 var DOMURL = window.URL || window.webkitURL || window;
 
 var img = new Image();
+img.crossOrigin = 'anonymous';
+document.body.appendChild(img);
 var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-var url = DOMURL.createObjectURL(svg);
+
+var form = new FormData();
+form.append('file', svg, 'maze' + new Date().getTime());
+$.ajax({
+  method: 'POST',
+  url: apiUrl + '/maze',
+  data: form,
+  contentType: false,
+  processData: false,
+  success: function(res) {
+    console.log('success');
+    img.src = res;
+  },
+  error: function(res) {
+    console.log('error');
+    console.log(res);}
+});
 
 img.onload = function () {
   setTimeout(function() {
+    canvas.setAttribute('width', img.width);
+    canvas.setAttribute('height', img.height);
     ctx.drawImage(img, 0, 0);
-    DOMURL.revokeObjectURL(url);
+    console.log(canvas.toDataURL('image/png'));
     getGridFromImage(ctx.getImageData(0, 0, canvas.offsetWidth, canvas.offsetHeight));
   }, 0);
 }
-
-img.setAttribute('crossOrigin', '');
-img.src = url;
 
 function getGridFromImage(imageData) {
   var grid = new Array(imageData.height);
