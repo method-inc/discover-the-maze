@@ -39,46 +39,52 @@ var img = new Image();
 img.crossOrigin = 'anonymous';
 document.body.appendChild(img);
 var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+var url = DOMURL.createObjectURL(svg);
 
-var form = new FormData();
-form.append('file', svg, 'maze' + new Date().getTime());
-$.ajax({
-  method: 'POST',
-  url: apiUrl + '/maze',
-  data: form,
-  contentType: false,
-  processData: false,
-  success: function(res) {
-    console.log('success');
-    img.src = res;
-  },
-  error: function(res) {
-    console.log('error');
-    console.log(res);}
-});
+function dataURItoBlob(dataURI) {
+  var binary = atob(dataURI.split(',')[1]);
+  var array = [];
+  for(var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  return new Blob([new Uint8Array(array)], {type: 'image/png'});
+}
 
 img.onload = function () {
-  setTimeout(function() {
-    canvas.setAttribute('width', img.width);
-    canvas.setAttribute('height', img.height);
-    ctx.drawImage(img, 0, 0);
-    console.log(canvas.toDataURL('image/png'));
-    getGridFromImage(ctx.getImageData(0, 0, canvas.offsetWidth, canvas.offsetHeight));
-  }, 0);
+  var dataUrl = canvas.toDataURL('image/png');
+  var blob = dataURItoBlob(dataUrl);
+  var form = new FormData();
+  form.append('file', blob, 'maze' + new Date().getTime() + '.png');
+  $.ajax({
+    method: 'POST',
+    url: apiUrl + '/maze',
+    data: form,
+    contentType: false,
+    processData: false,
+    success: function(res) {
+      console.log('success');
+    },
+    error: function(res) {
+      console.log('error');
+      console.log(res);
+    }
+  });
 }
 
-function getGridFromImage(imageData) {
-  var grid = new Array(imageData.height);
-  for (let y = 0; y < imageData.height; y++) {
-    grid[y] = new Array(imageData.width);
-  }
+img.src = url;
 
-  for (var i = 0, length = imageData.data.length; i < length; i += 4) {
-    var x = Math.floor(i/4 % imageData.width);
-    var y = Math.floor(i/4 / imageData.width);
-    grid[y][x] = imageData.data[i] === 0;
-  }
-
-  console.log(grid);
-  return grid;
-}
+// function getGridFromImage(imageData) {
+//   var grid = new Array(imageData.height);
+//   for (let y = 0; y < imageData.height; y++) {
+//     grid[y] = new Array(imageData.width);
+//   }
+//
+//   for (var i = 0, length = imageData.data.length; i < length; i += 4) {
+//     var x = Math.floor(i/4 % imageData.width);
+//     var y = Math.floor(i/4 / imageData.width);
+//     grid[y][x] = imageData.data[i] === 0;
+//   }
+//
+//   console.log(grid);
+//   return grid;
+// }

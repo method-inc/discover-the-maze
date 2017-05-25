@@ -21,19 +21,14 @@ def uploaded_file(filename):
 
 @app.route('/api/maze', methods=['POST'])
 def upload_maze():
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
     file = request.files['file']
-    # if user does not select file, browser also
-    # submit a empty part without filename
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    if file:
-        filename = secure_filename(file.filename + '.svg')
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return url_for('uploaded_file', filename=filename)
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+    file.save(filename)
+    Image.open(filename);
+    image = Image.open(filename)
+    image = image.convert('RGB')
+    pixels = image.load()
+    return 'uploaded'
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
