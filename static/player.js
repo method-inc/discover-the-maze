@@ -1,6 +1,6 @@
 // /index.html?width=10&height=5&seed=9
 
-var apiUrl = 'http://localhost:5000/api';
+var apiUrl = '/api';
 var height = getURLParameter("height") || 50;
 var width = getURLParameter("width") || 100;
 
