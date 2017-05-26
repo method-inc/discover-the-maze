@@ -1,15 +1,16 @@
 // /index.html?width=10&height=5&seed=9
 
 var apiUrl = '/api';
-var height = getURLParameter("height") || 300;
-var width = getURLParameter("width") || 600;
+var height = getURLParameter("height") || 50;
+var width = getURLParameter("width") || 100;
+var cellPixels = 4;
+var rasterizeOptions = { height: height * cellPixels, width: width * cellPixels };
 
 var maze = document.getElementById('maze');
 var canvas = document.createElement('canvas');
-canvas.setAttribute('width', width);
-canvas.setAttribute('height', height);
+canvas.setAttribute('height', rasterizeOptions.height);
+canvas.setAttribute('width', rasterizeOptions.width);
 document.body.appendChild(canvas);
-
 var ctx    = canvas.getContext('2d');
 
 var styleHtml = '';
@@ -24,45 +25,35 @@ styleHtml = styleHtml
   .replace(new RegExp('border-right:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-right: 1px')
   .replace(new RegExp('border-bottom:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-bottom: 1px')
   .replace(new RegExp('border-left:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-left: 1px')
-  .replace(new RegExp('width:\\s*\\d+(\\.\\d+)?vw', 'g'), 'width: 4px')
-  .replace(new RegExp('height:\\s*\\d+(\\.\\d+)?vw', 'g'), 'height: 4px')
+  .replace(new RegExp('width:\\s*\\d+(\\.\\d+)?vw', 'g'), 'width: ' + (cellPixels - 2) + 'px')
+  .replace(new RegExp('height:\\s*\\d+(\\.\\d+)?vw', 'g'), 'height: ' + (cellPixels - 2) + 'px')
   .replace(new RegExp('#CCC', 'g'), '#000')
   .replace(new RegExp('#DDD;', 'g'), '#FFF')
   .replace(new RegExp('background-color:.+;', 'g'), '');
 
 console.log(styleHtml);
 
-// var data = `
-//   <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-//     <foreignObject width="100%" height="100%">
-//       <div xmlns="http://www.w3.org/1999/xhtml">
-//         ${styleHtml + maze.outerHTML}
-//       </div>
-//     </foreignObject>
-//   </svg>`;
-
-
-rasterizeHTML.drawHTML(styleHtml + maze.outerHTML, canvas, {height: height, width: width} ).then(function (renderResult) {
+rasterizeHTML.drawHTML(styleHtml + maze.outerHTML, canvas, rasterizeOptions).then(function (renderResult) {
   console.log(renderResult);
-    var dataUrl = canvas.toDataURL('image/png');
-    var pixels = ctx.getImageData(0, 0, width * 6, height * 6);
-    var blob = dataURItoBlob(dataUrl);
-    var form = new FormData();
-    form.append('file', blob, 'maze' + new Date().getTime() + '.png');
-    $.ajax({
-      method: 'POST',
-      url: apiUrl + '/maze',
-      data: form,
-      contentType: false,
-      processData: false,
-      success: function(res) {
-        console.log('success');
-      },
-      error: function(res) {
-        console.log('error');
-        console.log(res);
-      }
-    });
+  var dataUrl = canvas.toDataURL('image/png');
+  var pixels = ctx.getImageData(0, 0, width * 6, height * 6);
+  var blob = dataURItoBlob(dataUrl);
+  var form = new FormData();
+  form.append('file', blob, 'maze' + new Date().getTime() + '.png');
+  $.ajax({
+    method: 'POST',
+    url: apiUrl + '/maze',
+    data: form,
+    contentType: false,
+    processData: false,
+    success: function(res) {
+      console.log('success');
+    },
+    error: function(res) {
+      console.log('error');
+      console.log(res);
+    }
+  });
 });
 var DOMURL = window.URL || window.webkitURL || window;
 //
