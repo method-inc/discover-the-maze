@@ -1,13 +1,13 @@
 // /index.html?width=10&height=5&seed=9
 
 var apiUrl = '/api';
-var height = getURLParameter("height") || 50;
-var width = getURLParameter("width") || 100;
+var height = getURLParameter("height") || 300;
+var width = getURLParameter("width") || 600;
 
 var maze = document.getElementById('maze');
 var canvas = document.createElement('canvas');
-canvas.setAttribute('width', width * 6);
-canvas.setAttribute('height', height * 6);
+canvas.setAttribute('width', width);
+canvas.setAttribute('height', height);
 document.body.appendChild(canvas);
 
 var ctx    = canvas.getContext('2d');
@@ -42,8 +42,8 @@ console.log(styleHtml);
 //   </svg>`;
 
 
-rasterizeHTML.drawHTML(styleHtml + maze.outerHTML).then(function (renderResult) {
-    ctx.drawImage(renderResult.image, 0, 0);
+rasterizeHTML.drawHTML(styleHtml + maze.outerHTML, canvas, {height: height, width: width} ).then(function (renderResult) {
+  console.log(renderResult);
     var dataUrl = canvas.toDataURL('image/png');
     var pixels = ctx.getImageData(0, 0, width * 6, height * 6);
     var blob = dataURItoBlob(dataUrl);
