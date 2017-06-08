@@ -80,7 +80,14 @@ class Solver:
     def solve(self):
         logging.info('Solving...')
         path = self._BFS(self.START, self.END)
-        return path
+
+        if path is None:
+            logging.error('No path found.')
+            # self._drawX(self.START, self.START_COLOR)
+            # self._drawX(self.END, self.END_COLOR)
+            self.image.save(self.file_out)
+            return path
+            # sys.exit(1)
 
         # Draw solution path.
         for position in path:
@@ -89,6 +96,8 @@ class Solver:
 
         self.image.save(self.file_out)
         logging.info("Solution saved as '{0}'.".format(self.file_out))
+
+        return path
         #self.image.show()
 
     def _drawX(self, pos, color=(255,0,0)):
