@@ -50,14 +50,14 @@ class Solver:
         self.image = Image.open(self.file_in)
         self.image = self.image.convert('RGB')
         self.pixels = self.image.load()
-        self._cleanImage()
+        # self._cleanImage()
         logging.info("Loaded image '{0}' ({1} pixels).".format(self.file_in, self.image.size))
 
 		# TODO: START/END is currently hardcoded for 'maze_000.jpeg'.
         self.START = (1,1)
         print self.image.width
         print self.image.height
-        self.END = (self.image.width - 1, self.image.height - 1)
+        self.END = (self.image.width - 2, self.image.height - 2)
 
         # BFS parameters.
         self.tmp_dir = 'tmp'
