@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, redirect, url_for, send_from_director
 from werkzeug.utils import secure_filename
 from PIL import Image
 import os
+import json
 
 from solver import Solver
 
@@ -39,9 +40,9 @@ def upload_maze():
     image = image.convert('RGB')
     pixels = image.load()
     s = Solver(filename)
-    s.solve()
+    path = s.solve()
 
-    return 'uploaded'
+    return json.dumps(path)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

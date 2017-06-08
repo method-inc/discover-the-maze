@@ -82,10 +82,13 @@ class Solver:
         path = self._BFS(self.START, self.END)
         if path is None:
             logging.error('No path found.')
+            return []
             # self._drawX(self.START, self.START_COLOR)
             # self._drawX(self.END, self.END_COLOR)
-            self.image.save(self.file_out)
-            sys.exit(1)
+            # self.image.save(self.file_out)
+            # sys.exit(1)
+
+        return path
 
         # Draw solution path.
         for position in path:
