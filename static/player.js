@@ -6,7 +6,7 @@ var width = getURLParameter("width") || 100;
 var cellPixels = 4;
 var rasterizeOptions = { height: height * cellPixels, width: width * cellPixels };
 
-var maze = document.getElementById('maze');
+var mazeElement = document.getElementById('maze');
 var canvas = document.createElement('canvas');
 canvas.setAttribute('height', rasterizeOptions.height);
 canvas.setAttribute('width', rasterizeOptions.width);
@@ -33,7 +33,7 @@ styleHtml = styleHtml
 
 console.log(styleHtml);
 
-rasterizeHTML.drawHTML(styleHtml + maze.outerHTML, canvas, rasterizeOptions).then(function (renderResult) {
+rasterizeHTML.drawHTML(styleHtml + mazeElement.outerHTML, canvas, rasterizeOptions).then(function (renderResult) {
   console.log(renderResult);
   var dataUrl = canvas.toDataURL('image/png');
   var pixels = ctx.getImageData(0, 0, width * 6, height * 6);
@@ -48,6 +48,8 @@ rasterizeHTML.drawHTML(styleHtml + maze.outerHTML, canvas, rasterizeOptions).the
     processData: false,
     success: function(res) {
       console.log('success');
+      var tempSolution = ['moveRight', 'moveDown', 'moveRight', 'moveDown', 'moveRight', 'moveRight', 'moveDown', 'moveRight', 'moveDown', 'moveRight', 'moveRight', 'moveUp', 'moveRight', 'moveRight', 'moveDown'];
+      executeSolution(tempSolution);
     },
     error: function(res) {
       console.log('error');
@@ -70,6 +72,24 @@ function dataURItoBlob(dataURI) {
     array.push(binary.charCodeAt(i));
   }
   return new Blob([new Uint8Array(array)], {type: 'image/png'});
+}
+
+function executeSolution(solution) {
+  if (solution.length === 0) {
+    maze.stop(false);
+    return;
+  }
+
+  solution.forEach(function(step) {
+    var currentIndex = maze.currentIdx();
+    var newIndex = maze[step]();
+    if (currentIndex === newIndex) {
+      console.log('we screwed up');
+      maze.stop(false);
+      return false;
+    }
+  });
+  maze.stop(true);
 }
 //
 // img.onload = function () {
