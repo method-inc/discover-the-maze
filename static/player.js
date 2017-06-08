@@ -31,10 +31,7 @@ styleHtml = styleHtml
   .replace(new RegExp('#DDD;', 'g'), '#FFF')
   .replace(new RegExp('background-color:.+;', 'g'), 'background-color: #FFFFFF;');
 
-console.log(styleHtml);
-
 rasterizeHTML.drawHTML(styleHtml + mazeElement.outerHTML, canvas, rasterizeOptions).then(function (renderResult) {
-  console.log(renderResult);
   var dataUrl = canvas.toDataURL('image/png');
   var pixels = ctx.getImageData(0, 0, width * 6, height * 6);
   var blob = dataURItoBlob(dataUrl);
@@ -47,9 +44,14 @@ rasterizeHTML.drawHTML(styleHtml + mazeElement.outerHTML, canvas, rasterizeOptio
     contentType: false,
     processData: false,
     success: function(res) {
-      console.log('success');
-      var tempSolution = ['moveRight', 'moveDown', 'moveRight', 'moveDown', 'moveRight', 'moveRight', 'moveDown', 'moveRight', 'moveDown', 'moveRight', 'moveRight', 'moveUp', 'moveRight', 'moveRight', 'moveDown'];
-      executeSolution(tempSolution);
+      const { solveable, moves } = JSON.parse(res);
+      if (solveable) {
+        console.log('executing moves...');
+        executeSolution(moves);
+      } else {
+        console.log('not solveable');
+        maze.stop(false);
+      }
     },
     error: function(res) {
       console.log('error');
@@ -75,20 +77,20 @@ function dataURItoBlob(dataURI) {
 }
 
 function executeSolution(solution) {
-  if (solution.length === 0) {
-    maze.stop(false);
-    return;
-  }
+  console.info(solution);
 
-  solution.forEach(function(step) {
+  for (let i=0; i <= solution.length; i++) {
+    const move = solution[i];
+    console.info(move);
     var currentIndex = maze.currentIdx();
-    var newIndex = maze[step]();
+    var newIndex = maze[move]();
     if (currentIndex === newIndex) {
-      console.log('we screwed up');
+      console.error('we screwed up');
       maze.stop(false);
       return false;
     }
-  });
+  }
+
   maze.stop(true);
 }
 //

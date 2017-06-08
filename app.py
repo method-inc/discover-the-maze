@@ -6,6 +6,7 @@ import os
 import json
 
 from solver import Solver
+from parse_path import path_to_moves
 
 UPLOAD_FOLDER = 'uploads'
 
@@ -38,7 +39,10 @@ def upload_maze():
     s = Solver(filename)
     path = s.solve()
 
-    return json.dumps(path)
+    if path:
+        return json.dumps({ 'solveable': True, 'moves': path_to_moves(path) })
+    else:
+        return json.dumps({ 'solveable': False })
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
