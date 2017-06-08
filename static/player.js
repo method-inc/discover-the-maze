@@ -29,7 +29,7 @@ styleHtml = styleHtml
   .replace(new RegExp('height:\\s*\\d+(\\.\\d+)?vw', 'g'), 'height: ' + (cellPixels - 2) + 'px')
   .replace(new RegExp('#CCC', 'g'), '#000')
   .replace(new RegExp('#DDD;', 'g'), '#FFF')
-  .replace(new RegExp('background-color:.+;', 'g'), '');
+  .replace(new RegExp('background-color:.+;', 'g'), 'background-color: #FFFFFF;');
 
 console.log(styleHtml);
 
