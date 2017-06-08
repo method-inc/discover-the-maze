@@ -35,10 +35,6 @@ def upload_maze():
     file = request.files['file']
     filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
     file.save(filename)
-    Image.open(filename);
-    image = Image.open(filename)
-    image = image.convert('RGB')
-    pixels = image.load()
     s = Solver(filename)
     path = s.solve()
 
