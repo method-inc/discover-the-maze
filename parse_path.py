@@ -17,9 +17,17 @@ def path_to_moves(path):
         moveX = calculate_move(diffX, "moveLeft", "moveRight")
         moveY = calculate_move(diffY, "moveUp", "moveDown")
 
-        move = moveX or moveY
-        if move:
-            origin = (x, y)
-            moves.append(move)
+        # move = moveX or moveY
+        if moveX:
+            origin = (x, origin[1])
+            print origin
+            print moveX
+            moves.append(moveX)
+
+        if moveY:
+            origin = (origin[0], y)
+            print origin
+            print moveY
+            moves.append(moveY)
 
     return moves
