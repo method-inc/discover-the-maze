@@ -4,6 +4,8 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 import os
 
+from solver import Solver
+
 UPLOAD_FOLDER = 'uploads'
 
 app = Flask(__name__, static_url_path='')
@@ -36,6 +38,9 @@ def upload_maze():
     image = Image.open(filename)
     image = image.convert('RGB')
     pixels = image.load()
+    s = Solver(filename)
+    s.solve()
+
     return 'uploaded'
 
 if __name__ == '__main__':
