@@ -10,7 +10,7 @@ var mazeElement = document.getElementById('maze');
 var canvas = document.createElement('canvas');
 canvas.setAttribute('height', rasterizeOptions.height);
 canvas.setAttribute('width', rasterizeOptions.width);
-document.body.appendChild(canvas);
+//document.body.appendChild(canvas);
 var ctx    = canvas.getContext('2d');
 
 var styleHtml = '';
