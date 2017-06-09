@@ -147,7 +147,7 @@ class Solver:
                 for position in path:
                     x,y = position
                     pixels[x,y] = self.COLOR_RED
-                image.save('{0}/{1:05d}.jpg'.format(self.tmp_dir, img))
+                # image.save('{0}/{1:05d}.jpg'.format(self.tmp_dir, img))
                 logging.info('Found a path after {0} iterations.'.format(self.iterations))
                 return path
 
@@ -160,7 +160,7 @@ class Solver:
                     Q += [new_path]
 
             if self.iterations % self.SNAPSHOT_FREQ == 0:
-                image.save('{0}/{1:05d}.jpg'.format(self.tmp_dir, img))
+                # image.save('{0}/{1:05d}.jpg'.format(self.tmp_dir, img))
                 img += 1
             self.iterations += 1
 
