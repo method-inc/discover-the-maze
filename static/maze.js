@@ -147,7 +147,7 @@ class Maze {
     if (playBackIdx > 0) {
       var currentIdx = this.moves[playBackIdx - 1];
       var currentNode = document.getElementById("" + currentIdx);
-      currentNode.className = currentNode.className.replace("current", "");
+      currentNode.className = currentNode.className.replace("current", "past");
     }
 
     var destinationIdx = this.moves[playBackIdx];
