@@ -33,16 +33,21 @@ def uploaded_file(filename):
 
 @app.route('/api/maze', methods=['POST'])
 def upload_maze():
+    def get_response_for_path(path):
+        if path:
+            return jsonify({ 'solveable': True, 'moves': path_to_moves(path) })
+        else:
+            return jsonify({ 'solveable': False })
+
     file = request.files['file']
     filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
     file.save(filename)
     s = Solver(filename)
     path = s.solve()
 
-    if path:
-        return json.dumps({ 'solveable': True, 'moves': path_to_moves(path) })
-    else:
-        return json.dumps({ 'solveable': False })
+    response = get_response_for_path(path)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
