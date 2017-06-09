@@ -22,13 +22,14 @@ def path_to_moves(path):
     moves = []
 
     for x, y in path:
-        (lateral_move, previous_lateral_move) = calculate_move(x, origin[0], previous_lateral_move, "moveLeft", "moveRight")
-        (vertical_move, previous_vertical_move) = calculate_move(y, origin[1], previous_vertical_move, "moveUp", "moveDown")
+        (origin_x, origin_y) = origin
+        (lateral_move, previous_lateral_move) = calculate_move(x, origin_x, previous_lateral_move, "moveLeft", "moveRight")
+        (vertical_move, previous_vertical_move) = calculate_move(y, origin_y, previous_vertical_move, "moveUp", "moveDown")
 
         move = lateral_move or vertical_move
 
         if move:
             moves.append(move)
-            origin = (x if lateral_move else origin[0], y if vertical_move else origin[1])
+            origin = (x if lateral_move else origin_x, y if vertical_move else origin_y)
 
     return moves
