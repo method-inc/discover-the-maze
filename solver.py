@@ -85,7 +85,7 @@ class Solver:
             logging.error('No path found.')
             # self._drawX(self.START, self.START_COLOR)
             # self._drawX(self.END, self.END_COLOR)
-            self.image.save(self.file_out)
+            # self.image.save(self.file_out)
             return path
             # sys.exit(1)
 
@@ -94,8 +94,8 @@ class Solver:
             x,y = position
             self.pixels[x,y] = self.COLOR_RED
 
-        self.image.save(self.file_out)
-        logging.info("Solution saved as '{0}'.".format(self.file_out))
+        # self.image.save(self.file_out)
+        # logging.info("Solution saved as '{0}'.".format(self.file_out))
 
         return path
         #self.image.show()
