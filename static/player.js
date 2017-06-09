@@ -1,4 +1,4 @@
-const API_URL = 'http://0.0.0.0:5000/api/maze';
+const API_URL = '/api/maze';
 
 const height = getURLParameter("height") || 50;
 const width = getURLParameter("width") || 100;
