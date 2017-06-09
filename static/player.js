@@ -1,5 +1,3 @@
-// /index.html?width=10&height=5&seed=9
-
 var apiUrl = '/api';
 var height = getURLParameter("height") || 50;
 var width = getURLParameter("width") || 100;
@@ -41,20 +39,16 @@ function dataURItoBlob(dataURI) {
 }
 
 function executeSolution(solution) {
-  console.info(solution);
-
   for (let i=0; i < solution.length; i++) {
     const move = solution[i];
-    console.info(move);
     var currentIndex = maze.currentIdx();
     var newIndex = maze[move]();
     if (currentIndex === newIndex) {
       console.error('we screwed up');
-      maze.stop(false);
+      maze.stop(true);
       return false;
     }
   }
-
   maze.stop(true);
 }
 
@@ -73,7 +67,6 @@ rasterizeHTML.drawHTML(styleHtml + mazeElement.outerHTML, canvas, rasterizeOptio
     success: function(res) {
       const { solveable, moves } = JSON.parse(res);
       if (solveable) {
-        console.log('executing moves...');
         executeSolution(moves);
       } else {
         console.log('not solveable');
