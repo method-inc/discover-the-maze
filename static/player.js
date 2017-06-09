@@ -85,5 +85,34 @@ function solve() {
     script.async = true;
     script.onload = solve;
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/rasterizehtml/1.2.4/rasterizeHTML.allinone.js';
-    d.getElementsByTagName('head')[0].appendChild(script);
+    d.head.appendChild(script);
+
+    style = d.createElement('style');
+    style.innerHTML = `
+      body {
+        padding: 50px;
+      }
+      .current {
+        position: relative;
+        background-color: inherit;
+      }
+      .current:after {
+        width: 200%;
+        height: 200%;
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        background-image: url(https://emoji.slack-edge.com/T024FHH0A/glenn_face/aebca6a2b4fe85bc.png);
+        background-size: cover;
+        content: '';
+        animation: panting infinite 0.8s linear;
+      }
+
+      @keyframes panting {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        0% { transform: scale(1); }
+      }
+    `;
+    d.head.appendChild(style);
 }(document));
