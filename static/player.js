@@ -3,7 +3,7 @@
 var apiUrl = '/api';
 var height = getURLParameter("height") || 50;
 var width = getURLParameter("width") || 100;
-var cellPixels = 4;
+var cellPixels = 3;
 var rasterizeOptions = { height: height * cellPixels, width: width * cellPixels };
 
 var mazeElement = document.getElementById('maze');
@@ -43,7 +43,7 @@ function dataURItoBlob(dataURI) {
 function executeSolution(solution) {
   console.info(solution);
 
-  for (let i=0; i <= solution.length; i++) {
+  for (let i=0; i < solution.length; i++) {
     const move = solution[i];
     console.info(move);
     var currentIndex = maze.currentIdx();

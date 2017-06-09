@@ -1,33 +1,34 @@
-CELL_SIZE = 4
+CELL_SIZE = 3
 
-def calculate_move(diff, positiveMoveName, negativeMoveName):
-    if abs(diff) >= CELL_SIZE:
-        return positiveMoveName if diff > 0 else negativeMoveName
-    else:
-        return None
+def calculate_move(current_val, origin_val, previous_move, negative_move, positive_move):
+    delta = current_val - origin_val
+    abs_delta = abs(delta)
+    move = None
+
+    if abs_delta > 0:
+        _move = positive_move if delta > 0 else negative_move
+
+        if previous_move and _move != previous_move:
+            move = _move
+        elif abs_delta >= CELL_SIZE:
+            move = _move
+
+    return (move, move or previous_move)
 
 def path_to_moves(path):
-    origin = path[0]
+    origin = (0, 0)
+    previous_lateral_move = None
+    previous_vertical_move = None
     moves = []
 
     for x, y in path:
-        # print x, y
-        diffX = origin[0] - x
-        diffY = origin[1] - y
-        moveX = calculate_move(diffX, "moveLeft", "moveRight")
-        moveY = calculate_move(diffY, "moveUp", "moveDown")
+        (lateral_move, previous_lateral_move) = calculate_move(x, origin[0], previous_lateral_move, "moveLeft", "moveRight")
+        (vertical_move, previous_vertical_move) = calculate_move(y, origin[1], previous_vertical_move, "moveUp", "moveDown")
 
-        # move = moveX or moveY
-        if moveX:
-            origin = (x, origin[1])
-            print origin
-            print moveX
-            moves.append(moveX)
+        move = lateral_move or vertical_move
 
-        if moveY:
-            origin = (origin[0], y)
-            print origin
-            print moveY
-            moves.append(moveY)
+        if move:
+            moves.append(move)
+            origin = (x if lateral_move else origin[0], y if vertical_move else origin[1])
 
     return moves
