@@ -10,24 +10,51 @@ const canvas = document.createElement('canvas');
 canvas.setAttribute('height', rasterizeOptions.height);
 canvas.setAttribute('width', rasterizeOptions.width);
 const ctx = canvas.getContext('2d');
+const styleHtml = replaceStyleValues();
 
-let styleHtml = '';
-const styleTags = document.getElementsByTagName('style');
-for (let i = 0; i < styleTags.length; i++) {
-  styleHtml += styleTags[i].outerHTML;
+function replaceStyleValues() {
+  function replaceStyleValue(str, prop, val) {
+    return str.replace(new RegExp(`${prop}:\\s*\\d+(\\.\\d+)?vw`, 'g'), `${prop}: ${val}`)
+  }
+
+  let intermediateStyles = `<style>
+  body {
+    padding: 0;
+    margin: 0;
+  }
+  #maze {
+    background-color: #FFFFFF;
+  }
+  .node {
+    background-color: #FFFFFF;
+    display: table-cell;
+  }
+  </style>`;
+  const styleTags = document.getElementsByTagName('style');
+
+  for (let i = 0; i < styleTags.length; i++) {
+    intermediateStyles += styleTags[i].outerHTML;
+  }
+
+  const updatedStyleValues = {
+    'border': '1px',
+    'border-top': '1px',
+    'border-right': '1px',
+    'border-bottom': '1px',
+    'border-left': '1px',
+    'background-color': '#FFFFFF',
+    'width': `${(cellPixels - 2)}px`,
+    'height': `${(cellPixels - 2)}px`,
+  };
+
+  Object.entries(updatedStyleValues).forEach(([prop, val]) => {
+    intermediateStyles = replaceStyleValue(intermediateStyles, prop, val);
+  });
+
+  return intermediateStyles
+    .replace(new RegExp('#CCC', 'g'), '#000')
+    .replace(new RegExp('#DDD;', 'g'), '#FFF')
 }
-
-styleHtml = styleHtml
-  .replace(new RegExp('border:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border: 1px')
-  .replace(new RegExp('border-top:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-top: 1px')
-  .replace(new RegExp('border-right:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-right: 1px')
-  .replace(new RegExp('border-bottom:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-bottom: 1px')
-  .replace(new RegExp('border-left:\\s*\\d+(\\.\\d+)?vw', 'g'), 'border-left: 1px')
-  .replace(new RegExp('width:\\s*\\d+(\\.\\d+)?vw', 'g'), 'width: ' + (cellPixels - 2) + 'px')
-  .replace(new RegExp('height:\\s*\\d+(\\.\\d+)?vw', 'g'), 'height: ' + (cellPixels - 2) + 'px')
-  .replace(new RegExp('#CCC', 'g'), '#000')
-  .replace(new RegExp('#DDD;', 'g'), '#FFF')
-  .replace(new RegExp('background-color:.+;', 'g'), 'background-color: #FFFFFF;');
 
 function dataURItoBlob(dataURI) {
   const binary = atob(dataURI.split(',')[1]);
